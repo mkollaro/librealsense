@@ -476,7 +476,7 @@ namespace examples
                       vec2 depth_pixel;
                       // generate lattice pos; (0, 0) (1, 0) (2, 0) ... (w-1, h-1)
                       depth_pixel.x = mod(float(gl_VertexID), u_depth_size.x);
-                      depth_pixel.y = clamp(floor(float(gl_VertexID) / u_depth_size.y), 0.0, u_depth_size.y);
+                      depth_pixel.y = clamp(floor(float(gl_VertexID) / u_depth_size.x), 0.0, u_depth_size.y);
 
                       // get depth
                       vec2 depth_tex_pos = depth_pixel / u_depth_size;
