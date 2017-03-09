@@ -72,6 +72,9 @@ target_link_libraries(cpp-tutorial-2-streams ${DEPENDENCIES})
 add_executable(cpp-tutorial-3-pointcloud cpp-tutorial-3-pointcloud.cpp)
 target_link_libraries(cpp-tutorial-3-pointcloud ${DEPENDENCIES})
 
+add_executable(cpp-tutorial-4-gles3-pointcloud cpp-tutorial-4-gles3-pointcloud.cpp)
+target_link_libraries(cpp-tutorial-4-gles3-pointcloud ${DEPENDENCIES})
+
 # Examples
 add_executable(cpp-alignimages cpp-alignimages.cpp)
 target_link_libraries(cpp-alignimages ${DEPENDENCIES})
