@@ -18,34 +18,15 @@ require_package libusb-1.0-0-dev
 require_package libssl-dev
 
 if [ ! -d linux-image-$(uname -r) ]; then
-    git clone \
-        git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git \
-        kernel --depth 1 --branch $(uname -r)
+    source /etc/lsb-release
+    RELEASE=DISTRIB_CODENAME
+	echo -e "\e[36mEnabling sources in /etc/apt/sources.list\e[0m"
+    echo "deb-src http://us.archive.ubuntu.com/ubuntu/ $RELEASE main restricted" >> /etc/apt/sources.list
+    apt-get update
+	echo -e "\e[36mDownloading Linux source code\e[0m"
+    apt-get source linux-image-$(uname -r)
 fi
-cd kernel
-
-# Verify that there are no trailing changes., warn the user to make corrective action if needed
-if [ $(git status | grep 'modified:' | wc -l) -ne 0 ];
-then
-	echo -e "\e[36mThe kernel has modified files:\e[0m"
-	git status | grep 'modified:'
-	echo -e "\e[36mProceeding will reset all local kernel changes. Press 'n' within 10 seconds to abort the procedure"
-	set +e
-	read -t 10 -r -p "Do you want to proceed? [Y/n]" response
-	set -e
-	response=${response,,}    # tolower
-	if [[ $response =~ ^(n|N)$ ]]; 
-	then
-		echo -e "\e[41mScript has been aborted on user requiest. Please resolve the modified files are rerun\e[0m"
-		exit 1
-	else
-		echo -e "\e[0m"
-		printf "Resetting local changes in %s folder\n " ${kernel_name}
-		git reset --hard
-		echo -e "\e[32mUpdate the folder content with the latest from mainline branch\e[0m"
-		git pull origin master
-	fi
-fi
+cd linux-image-$(uname -r)
 
 #Check if we need to apply patches or get reload stock drivers (Developers' option)
 [ "$#" -ne 0 -a "$1" == "reset" ] && reset_driver=1 || reset_driver=0
