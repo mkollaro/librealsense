@@ -65,9 +65,10 @@ sudo cp $KERNEL_PATH/Module.symvers .
 echo -e "\e[32mCompiling uvc module\e[0m"
 sudo make -C $KERNEL_PATH M=$KERNEL_PATH/drivers/media/usb/uvc/ modules
 
-echo -e "\e[32mPatched kernel module created successfully\n\e[0m"
+echo -e "\e[32mPatched kernel module created successfully, installing now\n\e[0m"
 
+sudo make -C $KERNEL_PATH M=$KERNEL_PATH/drivers/media/usb/uvc/ modules_install
 # Load the newly built module(s)
-try_module_insert uvcvideo $KERNEL_PATH/drivers/media/usb/uvc/uvcvideo.ko /lib/modules/`uname -r`/kernel/drivers/media/usb/uvc/uvcvideo.ko
+#try_module_insert uvcvideo $KERNEL_PATH/drivers/media/usb/uvc/uvcvideo.ko /lib/modules/`uname -r`/kernel/drivers/media/usb/uvc/uvcvideo.ko
 
 echo -e "\e[92m\n\e[1mScript has completed successfully. Please consult the installation guide for further instruction.\n\e[0m"
