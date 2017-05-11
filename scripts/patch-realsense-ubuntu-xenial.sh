@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 # Get the required tools and headers to build the kernel
-sudo apt-get install linux-headers-generic build-essential git
+sudo apt-get install linux-headers-$(uname -r) build-essential git
 
 if [ $(ls /dev/video* | wc -l) -ne 0 ];
 then
@@ -56,7 +56,7 @@ sudo cp /usr/src/linux-headers-$(uname -r)/Module.symvers .
 
 # Basic build so we can build just the uvcvideo module
 #yes "" | make silentoldconfig modules_prepare
-make scripts silentoldconfig modules_prepare
+make silentoldconfig prepare modules_prepare scripts
 
 # Build the uvc, accel and gyro modules
 KERNEL_PATH=`pwd`
