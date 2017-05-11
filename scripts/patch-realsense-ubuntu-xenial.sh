@@ -19,7 +19,7 @@ require_package libssl-dev
 
 if [ ! -d linux-image-$(uname -r) ]; then
     source /etc/lsb-release
-    RELEASE=DISTRIB_CODENAME
+    RELEASE=$DISTRIB_CODENAME
 	echo -e "\e[36mEnabling sources in /etc/apt/sources.list\e[0m"
     sudo sh -c "echo \"deb-src http://us.archive.ubuntu.com/ubuntu/ $RELEASE main restricted\" >> /etc/apt/sources.list"
     sudo apt-get update
