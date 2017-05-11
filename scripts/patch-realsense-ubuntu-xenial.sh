@@ -52,13 +52,20 @@ fi
 
 if [ $reset_driver -eq 1 ];
 then 
-	echo -e "\e[43mUser requested to rebuild and reinstall ubuntu-xenial stock drivers\e[0m"	
+	echo -e "\e[43mUser requested to rebuild and reinstall ubuntu stock uvcvideo driver\e[0m"
 else
 	#Patching kernel for RealSense devices
-	echo -e "\e[32mApplying F200 formats patch patch\e[0m"
-	patch -p1 < ../"$( dirname "$0" )"/0001-Add-video-formats-for-Intel-real-sense-F200-camera-new.patch
-	echo -e "\e[32mApplying ZR300 SR300 and LR200 formats patch\e[0m"
-	patch -p1 < ../"$( dirname "$0" )"/0002-LR200-ZR300-and-SR300-Pixel-Formats.patch
+    MAJOR=$(uname -r| cut -d '.' -f 1)
+    MINOR=$(uname -r| cut -d '.' -f 2)
+    if [ $MAJOR != "4" ]; then
+        echo -e "\e[36mSorry, but only kernel version 4 is supported.\e[0m"
+        exit 1
+    fi
+    if [ $MINOR -le 2 ]; then
+        echo -e "\e[36mSorry, but only kernel version > 4.2 is supported.\e[0m"
+    fi
+	echo -e "\e[32mApplying uvcvideo patch\e[0m"
+	patch -p1 < ../"$( dirname "$0" )"/uvcvideo-$MAJOR.$MINOR.patch
 fi
 
 # Copy configuration
