@@ -17,16 +17,17 @@ source ./scripts/patch-utils.sh
 require_package libusb-1.0-0-dev
 require_package libssl-dev
 
-if [ ! -d linux-image-$(uname -r) ]; then
+if [ ! -d kernel ]; then
     source /etc/lsb-release
     RELEASE=$DISTRIB_CODENAME
 	echo -e "\e[36mEnabling sources in /etc/apt/sources.list\e[0m"
     sudo sh -c "echo \"deb-src http://us.archive.ubuntu.com/ubuntu/ $RELEASE main restricted\" >> /etc/apt/sources.list"
     sudo apt-get update
 	echo -e "\e[36mDownloading Linux source code\e[0m"
-    apt-get source linux-image-$(uname -r)
+    apt-get source linux-image-$(uname -r) --download-only
+    tar xf linux-image-$(uname -r).tar.gz kernel
 fi
-cd linux-image-$(uname -r)
+cd kernel
 
 #Check if we need to apply patches or get reload stock drivers (Developers' option)
 [ "$#" -ne 0 -a "$1" == "reset" ] && reset_driver=1 || reset_driver=0
