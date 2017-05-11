@@ -17,12 +17,12 @@ source ./scripts/patch-utils.sh
 require_package libusb-1.0-0-dev
 require_package libssl-dev
 
-LINUX_BRANCH=$(uname -r)
-kernel_name="ubuntu-xenial"
-
-# Download the latest the linux kernel sources from ubuntu-xenial tree
-[ ! -d ${kernel_name} ] && git clone git://kernel.ubuntu.com/ubuntu/ubuntu-xenial.git --depth 1
-cd ${kernel_name}
+if [ ! -d linux-image-$(uname -r) ]
+    git clone \
+        git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git \
+        --depth 1 --branch $(uname -r)
+fi
+cd linux-image-$(uname -r)
 
 # Verify that there are no trailing changes., warn the user to make corrective action if needed
 if [ $(git status | grep 'modified:' | wc -l) -ne 0 ];
