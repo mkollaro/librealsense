@@ -21,7 +21,7 @@ if [ ! -d linux-image-$(uname -r) ]; then
     source /etc/lsb-release
     RELEASE=DISTRIB_CODENAME
 	echo -e "\e[36mEnabling sources in /etc/apt/sources.list\e[0m"
-    echo "deb-src http://us.archive.ubuntu.com/ubuntu/ $RELEASE main restricted" >> /etc/apt/sources.list
+    sudo sh -c "echo \"deb-src http://us.archive.ubuntu.com/ubuntu/ $RELEASE main restricted\" >> /etc/apt/sources.list"
     apt-get update
 	echo -e "\e[36mDownloading Linux source code\e[0m"
     apt-get source linux-image-$(uname -r)
