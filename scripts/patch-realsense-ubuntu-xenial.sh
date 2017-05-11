@@ -17,7 +17,7 @@ source ./scripts/patch-utils.sh
 require_package libusb-1.0-0-dev
 require_package libssl-dev
 
-KERNEL_DIR="linux_$(uname -r | cut -d '-' -f 1)"
+KERNEL_DIR="linux-$(uname -r | cut -d '-' -f 1)"
 if [ ! -d $KERNEL_DIR ]; then
     source /etc/lsb-release
     RELEASE=$DISTRIB_CODENAME
