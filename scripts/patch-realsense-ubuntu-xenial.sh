@@ -17,8 +17,8 @@ source ./scripts/patch-utils.sh
 require_package libusb-1.0-0-dev
 require_package libssl-dev
 
-KERNEL_DIR="linux-$(uname -r | cut -d '-' -f 1)"
-if [ ! -d $KERNEL_DIR ]; then
+KERNEL_DIRNAME="linux-$(uname -r | cut -d '-' -f 1)"
+if [ ! -d $KERNEL_DIRNAME ]; then
     source /etc/lsb-release
     RELEASE=$DISTRIB_CODENAME
 	echo -e "\e[36mEnabling sources in /etc/apt/sources.list\e[0m"
@@ -27,7 +27,7 @@ if [ ! -d $KERNEL_DIR ]; then
 	echo -e "\e[36mDownloading Linux source code\e[0m"
     apt-get source linux-image-$(uname -r)
 fi
-cd $KERNEL_DIR
+cd $KERNEL_DIRNAME
 
 #Check if we need to apply patches or get reload stock drivers (Developers' option)
 [ "$#" -ne 0 -a "$1" == "reset" ] && reset_driver=1 || reset_driver=0
@@ -59,18 +59,15 @@ sudo cp /usr/src/linux-headers-$(uname -r)/Module.symvers .
 make scripts silentoldconfig modules_prepare
 
 # Build the uvc, accel and gyro modules
-KBASE=`pwd`
+KERNEL_PATH=`pwd`
 cd drivers/media/usb/uvc
-sudo cp $KBASE/Module.symvers .
+sudo cp $KERNEL_PATH/Module.symvers .
 echo -e "\e[32mCompiling uvc module\e[0m"
-sudo make -C $KBASE M=$KBASE/drivers/media/usb/uvc/ modules
-
-# Copy the patched modules to a sane location
-sudo cp $KBASE/drivers/media/usb/uvc/uvcvideo.ko ~/$LINUX_BRANCH-uvcvideo.ko
+sudo make -C $KERNEL_PATH M=$KERNEL_PATH/drivers/media/usb/uvc/ modules
 
 echo -e "\e[32mPatched kernel module created successfully\n\e[0m"
 
 # Load the newly built module(s)
-try_module_insert uvcvideo	~/$LINUX_BRANCH-uvcvideo.ko /lib/modules/`uname -r`/kernel/drivers/media/usb/uvc/uvcvideo.ko
+try_module_insert uvcvideo $KERNEL_PATH/drivers/media/usb/uvc/uvcvideo.ko /lib/modules/`uname -r`/kernel/drivers/media/usb/uvc/uvcvideo.ko
 
 echo -e "\e[92m\n\e[1mScript has completed successfully. Please consult the installation guide for further instruction.\n\e[0m"
